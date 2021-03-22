@@ -17,7 +17,6 @@ class DataQualityOperator(BaseOperator):
         self.data_qual_query = data_qual_query
         self.redshift_conn_id = redshift_conn_id
         self.table = table
-        self.less_one_check = less_one_check
 
     def execute(self, context):
         
