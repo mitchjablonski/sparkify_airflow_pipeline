@@ -26,6 +26,7 @@ user_table_insert = """
     SELECT distinct userid, firstname, lastname, gender, level
     FROM staging_events
     WHERE page='NextSong'
+    and userid is not NULL
 """
 
 song_table_check = """SELECT COUNT(*) FROM songs WHERE songid is NULL"""
@@ -33,6 +34,7 @@ song_table_insert = """
     INSERT INTO songs (songid, title, artistid, year, duration)
     SELECT distinct song_id, title, artist_id, year, duration
     FROM staging_songs
+    WHERE song_id is not NULL
 """
 
 artist_table_check = """SELECT COUNT(*) FROM artists"""
@@ -40,6 +42,7 @@ artist_table_insert = """
     INSERT INTO artists (artistid, name, location, lattitude, longitude)
     SELECT distinct artist_id, artist_name, artist_location, artist_latitude, artist_longitude
     FROM staging_songs
+    WHERE artistid is not NULL
 """
 
 time_table_check = """SELECT COUNT(*) FROM time"""
