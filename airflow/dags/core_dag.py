@@ -19,6 +19,7 @@ default_args = {
     'email_on_failure': False,
     'email_on_retry': False,
     'catchup':False,
+    'Depends_on_past': False
 }
 start_date = datetime(2019, 1, 12)
 dag_name = 'sparkify_core_etl'
@@ -80,7 +81,8 @@ load_songplays_table = LoadFactOperator(
     dag=dag,
     table='songplays',
     redshift_conn_id='redshift',
-    query=SqlQueries.songplay_table_insert
+    query=SqlQueries.songplay_table_insert,
+    truncate=True
 )
 
 
@@ -95,6 +97,7 @@ users_subtask_dag = SubDagOperator(
         table='users',
         data_qual_query=SqlQueries.user_table_check,
         start_date=start_date,
+        truncate=True,
     ),
     task_id=user_dim_task_id,
     dag=dag,
@@ -111,6 +114,7 @@ song_subtask_dag = SubDagOperator(
         table='songs',
         data_qual_query=SqlQueries.song_table_check,
         start_date=start_date,
+        Trunecate=True,
     ),
     task_id=song_dim_task_id,
     dag=dag,
@@ -127,6 +131,7 @@ artists_subtask_dag = SubDagOperator(
         table='artists',
         data_qual_query=SqlQueries.artist_table_check,
         start_date=start_date,
+        truncate=True
     ),
     task_id=artists_dim_task_id,
     dag=dag,
@@ -143,6 +148,7 @@ time_subtask_dag = SubDagOperator(
         table='time',
         data_qual_query=SqlQueries.time_table_check,
         start_date=start_date,
+        Trybcate-True,
     ),
     task_id=time_dim_task_id,
     dag=dag,

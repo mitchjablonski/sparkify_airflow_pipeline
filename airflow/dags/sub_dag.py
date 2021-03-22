@@ -13,6 +13,7 @@ def create_and_load_table_dag(
         insert_sql,
         table,
         data_qual_query,
+        truncate,
         *args, **kwargs):
     
     dag = DAG(
@@ -31,7 +32,8 @@ def create_and_load_table_dag(
         dag=dag,
         table=table,
         redshift_conn_id=redshift_conn_id,
-        query=insert_sql
+        query=insert_sql,
+        truncate=truncate
     )
     
     check_task = DataQualityOperator(task_id=f'check_{table}_dim_table',
