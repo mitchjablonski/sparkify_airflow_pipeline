@@ -12,7 +12,6 @@ def create_and_load_table_dag(
         create_sql,
         insert_sql,
         table,
-        data_qual_query,
         truncate,
         *args, **kwargs):
     
