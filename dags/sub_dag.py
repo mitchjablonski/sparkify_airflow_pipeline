@@ -22,14 +22,17 @@ def create_and_load_table_dag(
     )
 
     create_users_table = CreateTableOperator(task_id=f'create_{table}_table', 
-                                     dag=dag, 
-                                     redshift_conn_id=redshift_conn_id,
-                                    create_sql=create_sql,
+                                            dag=dag, 
+                                            redshift_conn_id=redshift_conn_id,
+                                            create_sql=create_sql,
                                             table=table)
 
     load_user_dimension_table = LoadDimensionOperator(
         task_id=f'Load_{table}_dim_table',
-        dag=dag
+        dag=dag,
+        table=table,
+        redshift_conn_id=redshift_conn_id,
+        query=insert_sql
     )
     
     check_task = DataQualityOperator(task_id=f'check_{table}_dim_table',

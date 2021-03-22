@@ -70,15 +70,15 @@ stage_songs_to_redshift = StageToRedshiftOperator(
 )
 
 create_songplays_table = CreateTableOperator(task_id='create_songplays_table', 
-                                     dag=dag, 
-                                     redshift_conn_id='redshift',
-                                    create_sql=SqlQueries.create_songplays_table,
+                                            dag=dag, 
+                                            redshift_conn_id='redshift',
+                                            create_sql=SqlQueries.create_songplays_table,
                                             table='songplays')
 
 load_songplays_table = LoadFactOperator(
     task_id='Load_songplays_fact_table',
     dag=dag,
-    tables='songplays',
+    table='songplays',
     redshift_conn_id='redshift',
     query=SqlQueries.songplay_table_insert
 )
@@ -86,10 +86,10 @@ load_songplays_table = LoadFactOperator(
 
 user_dim_task_id = "user_dim_subdag"
 users_subtask_dag = SubDagOperator(
-    subdag=create_and_load_table_dag(
+        subdag=create_and_load_table_dag(
         dag_name,
         user_dim_task_id,
-        "redshift",
+        redshift_conn_id="redshift",
         create_sql=SqlQueries.create_users_table,
         insert_sql=SqlQueries.user_table_insert,
         table='users',
@@ -106,7 +106,7 @@ song_subtask_dag = SubDagOperator(
     subdag=create_and_load_table_dag(
         dag_name,
         song_dim_task_id,
-        "redshift",
+        redshift_conn_id="redshift",
         create_sql=SqlQueries.create_songs_table,
         insert_sql=SqlQueries.song_table_insert,
         table='songs',
@@ -123,7 +123,7 @@ artists_subtask_dag = SubDagOperator(
     subdag=create_and_load_table_dag(
         dag_name,
         artists_dim_task_id,
-        "redshift",
+        redshift_conn_id="redshift",
         create_sql=SqlQueries.create_artists_table,
         insert_sql=SqlQueries.artist_table_insert,
         table='artists',
