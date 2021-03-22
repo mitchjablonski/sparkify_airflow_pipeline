@@ -85,7 +85,6 @@ load_songplays_table = LoadFactOperator(
     truncate=False
 )
 
-
 user_dim_task_id = "user_dim_subdag"
 users_subtask_dag = SubDagOperator(
         subdag=create_and_load_table_dag(
@@ -95,7 +94,6 @@ users_subtask_dag = SubDagOperator(
         create_sql=SqlQueries.create_users_table,
         insert_sql=SqlQueries.user_table_insert,
         table='users',
-        data_qual_query=SqlQueries.user_table_check,
         start_date=start_date,
         truncate=True,
     ),
@@ -112,7 +110,6 @@ song_subtask_dag = SubDagOperator(
         create_sql=SqlQueries.create_songs_table,
         insert_sql=SqlQueries.song_table_insert,
         table='songs',
-        data_qual_query=SqlQueries.song_table_check,
         start_date=start_date,
         Trunecate=True,
     ),
@@ -129,7 +126,6 @@ artists_subtask_dag = SubDagOperator(
         create_sql=SqlQueries.create_artists_table,
         insert_sql=SqlQueries.artist_table_insert,
         table='artists',
-        data_qual_query=SqlQueries.artist_table_check,
         start_date=start_date,
         truncate=True
     ),
@@ -146,7 +142,6 @@ time_subtask_dag = SubDagOperator(
         create_sql=SqlQueries.create_time_table,
         insert_sql=SqlQueries.time_table_insert,
         table='time',
-        data_qual_query=SqlQueries.time_table_check,
         start_date=start_date,
         Trybcate-True,
     ),
@@ -154,12 +149,11 @@ time_subtask_dag = SubDagOperator(
     dag=dag,
 )
 
-songplays_qual_check = DataQualityOperator(
-    task_id='songplays_qual_check',
+fact_and_dim_qual_check = DataQualityOperator(
+    task_id='fact_and_dim_qual_check',
     dag=dag,
     redshift_conn_id="redshift",
-    data_qual_query=SqlQueries.songplay_table_check,
-    table="songplays",
+    table_names=["songplays", "time", "artists", "songs", "users"],
 )
 
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
@@ -175,7 +169,7 @@ stage_events_to_redshift >> load_songplays_table
 
 create_songplays_table >> load_songplays_table
 
-load_songplays_table >> songplays_qual_check
+load_songplays_table >> fact_and_dim_qual_check
 
 load_songplays_table >> time_subtask_dag
 
@@ -185,9 +179,10 @@ stage_songs_to_redshift >> song_subtask_dag
 
 stage_songs_to_redshift >> artists_subtask_dag
 
+time_subtask_dag >> fact_and_dim_qual_check
+users_subtask_dag >> fact_and_dim_qual_check
+song_subtask_dag >> fact_and_dim_qual_check
+artists_subtask_dag >> fact_and_dim_qual_check
 
-songplays_qual_check >> end_operator
-time_subtask_dag >> end_operator
-users_subtask_dag >> end_operator
-song_subtask_dag >> end_operator
-artists_subtask_dag >> end_operator
+fact_and_dim_qual_check >> end_operator
+

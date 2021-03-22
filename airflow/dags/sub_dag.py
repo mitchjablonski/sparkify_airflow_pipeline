@@ -35,15 +35,7 @@ def create_and_load_table_dag(
         query=insert_sql,
         truncate=truncate
     )
-    
-    check_task = DataQualityOperator(task_id=f'check_{table}_dim_table',
-        dag=dag,
-        redshift_conn_id=redshift_conn_id,
-        data_qual_query=data_qual_query,
-        table=table,
-    )
 
     create_users_table >> load_user_dimension_table
-    load_user_dimension_table >> check_task
 
     return dag

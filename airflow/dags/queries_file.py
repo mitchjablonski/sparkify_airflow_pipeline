@@ -1,4 +1,3 @@
-songplay_table_check =  """SELECT COUNT(*) FROM songplays"""
 songplay_table_insert = """
     INSERT INTO songplays (playid, start_time, userid, level, songid, artistid, sessionid, location, user_agent)
     SELECT
@@ -20,7 +19,6 @@ songplay_table_insert = """
             AND events.length = songs.duration
 """
 
-user_table_check = """SELECT COUNT(*) FROM users """
 user_table_insert = """
     INSERT INTO users (userid, first_name, last_name, gender, level)
     SELECT distinct userid, firstname, lastname, gender, level
@@ -29,7 +27,6 @@ user_table_insert = """
     and userid is not NULL
 """
 
-song_table_check = """SELECT COUNT(*) FROM songs"""
 song_table_insert = """
     INSERT INTO songs (songid, title, artistid, year, duration)
     SELECT distinct song_id, title, artist_id, year, duration
@@ -37,7 +34,6 @@ song_table_insert = """
     WHERE song_id is not NULL
 """
 
-artist_table_check = """SELECT COUNT(*) FROM artists"""
 artist_table_insert = """
     INSERT INTO artists (artistid, name, location, lattitude, longitude)
     SELECT distinct artist_id, artist_name, artist_location, artist_latitude, artist_longitude
@@ -45,7 +41,6 @@ artist_table_insert = """
     WHERE artist_id is not NULL
 """
 
-time_table_check = """SELECT COUNT(*) FROM time"""
 time_table_insert = """
     INSERT INTO time (start_time, hour, day, week, month, year, dayofweek)
     SELECT start_time, extract(hour from start_time), extract(day from start_time), extract(week from start_time), 
