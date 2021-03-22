@@ -31,7 +31,6 @@ class StageToRedshiftOperator(BaseOperator):
         self.s3_bucket = s3_bucket
         self.s3_key = s3_key
         self.json = json
-        
 
     def execute(self, context):
         self.log.info('StageToRedshiftOperator grabbing AWS Hook')
