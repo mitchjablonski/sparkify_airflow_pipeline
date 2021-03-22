@@ -34,9 +34,9 @@ start_operator = DummyOperator(task_id='Begin_execution',  dag=dag)
 
 
 create_tables_stage_events = CreateTableOperator(task_id='events_creation', 
-                                     dag=dag, 
-                                     redshift_conn_id='redshift',
-                                    create_sql=SqlQueries.create_staging_events_table,
+                                                dag=dag, 
+                                                redshift_conn_id='redshift',
+                                                create_sql=SqlQueries.create_staging_events_table,
                                                 table='staging_events')
 
 stage_events_to_redshift = StageToRedshiftOperator(
@@ -52,9 +52,9 @@ stage_events_to_redshift = StageToRedshiftOperator(
 )
 
 create_staging_songs_table = CreateTableOperator(task_id='create_staging_songs_table', 
-                                     dag=dag, 
-                                     redshift_conn_id='redshift',
-                                    create_sql=SqlQueries.create_staging_songs_table,
+                                                dag=dag, 
+                                                redshift_conn_id='redshift',
+                                                create_sql=SqlQueries.create_staging_songs_table,
                                                 table='staging_songs')
 
 stage_songs_to_redshift = StageToRedshiftOperator(
@@ -94,7 +94,6 @@ users_subtask_dag = SubDagOperator(
         insert_sql=SqlQueries.user_table_insert,
         table='users',
         data_qual_query=SqlQueries.user_table_check,
-        less_one_check=False,
         start_date=start_date,
     ),
     task_id=user_dim_task_id,
@@ -111,7 +110,6 @@ song_subtask_dag = SubDagOperator(
         insert_sql=SqlQueries.song_table_insert,
         table='songs',
         data_qual_query=SqlQueries.song_table_check,
-        less_one_check=False,
         start_date=start_date,
     ),
     task_id=song_dim_task_id,
@@ -128,7 +126,6 @@ artists_subtask_dag = SubDagOperator(
         insert_sql=SqlQueries.artist_table_insert,
         table='artists',
         data_qual_query=SqlQueries.artist_table_check,
-        less_one_check=True,
         start_date=start_date,
     ),
     task_id=artists_dim_task_id,
@@ -145,7 +142,6 @@ time_subtask_dag = SubDagOperator(
         insert_sql=SqlQueries.time_table_insert,
         table='time',
         data_qual_query=SqlQueries.time_table_check,
-        less_one_check=True,
         start_date=start_date,
     ),
     task_id=time_dim_task_id,
@@ -158,7 +154,6 @@ songplays_qual_check = DataQualityOperator(
     redshift_conn_id="redshift",
     data_qual_query=SqlQueries.songplay_table_check,
     table="songplays",
-    less_one_check=True,
 )
 
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)

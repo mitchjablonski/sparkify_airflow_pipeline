@@ -13,7 +13,6 @@ def create_and_load_table_dag(
         insert_sql,
         table,
         data_qual_query,
-        less_one_check,
         *args, **kwargs):
     
     dag = DAG(
@@ -40,7 +39,6 @@ def create_and_load_table_dag(
         redshift_conn_id=redshift_conn_id,
         data_qual_query=data_qual_query,
         table=table,
-        less_one_check=less_one_check,
     )
 
     create_users_table >> load_user_dimension_table

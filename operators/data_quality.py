@@ -11,7 +11,6 @@ class DataQualityOperator(BaseOperator):
                  redshift_conn_id="",
                  data_qual_query="",
                  table="",
-                 less_one_check=True,
                  *args, **kwargs):
 
         super(DataQualityOperator, self).__init__(*args, **kwargs)
@@ -27,11 +26,7 @@ class DataQualityOperator(BaseOperator):
         if len(records) < 1 or len(records[0]) < 1:
             raise ValueError(f"Data quality check failed. {self.table} returned no results")
         num_records = records[0][0]
-        if self.less_one_check:
-            if num_records < 1:
-                raise ValueError(f"Data quality check failed. {self.table} contained 0 rows")
-        else:
-            if num_records > 0:
-                raise ValueError(f"Data quality check failed. {self.table} contained {num_records} rows")
+        if num_records < 1:
+            raise ValueError(f"Data quality check failed. {self.table} contained 0 rows")
         self.log.info(f"Data quality on table {self.table} check passed with {records[0][0]} records")
 

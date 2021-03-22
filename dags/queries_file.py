@@ -1,4 +1,4 @@
-songplay_table_check =  """SELECT COUNT(*) FROM songplays WHERE userid is NULL or song_id is NULL"""
+songplay_table_check =  """SELECT COUNT(*) FROM songplays"""
 songplay_table_insert = """
     INSERT INTO songplays (playid, start_time, userid, level, songid, artistid, sessionid, location, user_agent)
     SELECT
@@ -20,7 +20,7 @@ songplay_table_insert = """
             AND events.length = songs.duration
 """
 
-user_table_check = """SELECT COUNT(*) FROM users WHERE userid is NULL"""
+user_table_check = """SELECT COUNT(*) FROM users """
 user_table_insert = """
     INSERT INTO users (userid, first_name, last_name, gender, level)
     SELECT distinct userid, firstname, lastname, gender, level
@@ -29,7 +29,7 @@ user_table_insert = """
     and userid is not NULL
 """
 
-song_table_check = """SELECT COUNT(*) FROM songs WHERE songid is NULL"""
+song_table_check = """SELECT COUNT(*) FROM songs"""
 song_table_insert = """
     INSERT INTO songs (songid, title, artistid, year, duration)
     SELECT distinct song_id, title, artist_id, year, duration
@@ -42,7 +42,7 @@ artist_table_insert = """
     INSERT INTO artists (artistid, name, location, lattitude, longitude)
     SELECT distinct artist_id, artist_name, artist_location, artist_latitude, artist_longitude
     FROM staging_songs
-    WHERE artistid is not NULL
+    WHERE artist_id is not NULL
 """
 
 time_table_check = """SELECT COUNT(*) FROM time"""
