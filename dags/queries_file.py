@@ -121,7 +121,7 @@ create_time_table = """CREATE TABLE public."time" (
     week int4,
     "month" varchar(256),
     "year" int4,
-    weekday varchar(256),
+    dayofweek varchar(256),
     CONSTRAINT time_pkey PRIMARY KEY (start_time)
 );"""
 
