@@ -22,6 +22,6 @@ class LoadDimensionOperator(BaseOperator):
         self.log.info('Grabbing Postgres Hook')
         redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id)
         self.log.info('Emptying Table')
-        redshift_hook.run(f"DELETE FROM {self.table_name}")
+        redshift.run(f"DELETE FROM {self.table_name}")
         self.log.info(f'Running query {self.query}')
         redshift.run(self.query)

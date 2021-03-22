@@ -33,5 +33,5 @@ class DataQualityOperator(BaseOperator):
         else:
             if num_records > 0:
                 raise ValueError(f"Data quality check failed. {self.table} contained {num_records} rows")
-        logging.info(f"Data quality on table {self.table} check passed with {records[0][0]} records")
+        self.log.info(f"Data quality on table {self.table} check passed with {records[0][0]} records")
 
