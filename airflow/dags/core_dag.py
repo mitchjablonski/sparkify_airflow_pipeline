@@ -13,21 +13,20 @@ from airflow.operators.subdag_operator import SubDagOperator
 
 default_args = {
     'owner': 'udacity',
-    'start_date': datetime(2019, 1, 12),
-    'retries': 3,
+    'start_date': datetime.now()-datetime.timedelta(hours=1),
+    'retries': 0,
     'retry_delay': timedelta(minutes=5),
     'email_on_failure': False,
     'email_on_retry': False,
     'catchup':False,
-    'Depends_on_past': False
+    'Depends_on_past': False,
+    'schedule_interval':'0 * * * *',
+    'max_active_runs':1
 }
-start_date = datetime(2019, 1, 12)
 dag_name = 'sparkify_core_etl'
 dag = DAG(dag_name,
           default_args=default_args,
           description='Load and transform data in Redshift with Airflow',
-          schedule_interval='0 * * * *',
-          start_date=start_date
         )
 
 
@@ -95,7 +94,7 @@ users_subtask_dag = SubDagOperator(
         insert_sql=SqlQueries.user_table_insert,
         table='users',
         truncate=True,
-        start_date=start_date,
+        default_args=default_args
     ),
     task_id=user_dim_task_id,
     dag=dag,
@@ -111,7 +110,7 @@ song_subtask_dag = SubDagOperator(
         insert_sql=SqlQueries.song_table_insert,
         table='songs',
         truncate=True,
-        start_date=start_date,
+        default_args=default_args
     ),
     task_id=song_dim_task_id,
     dag=dag,
@@ -127,7 +126,7 @@ artists_subtask_dag = SubDagOperator(
         insert_sql=SqlQueries.artist_table_insert,
         table='artists',
         truncate=True,
-        start_date=start_date,
+        default_args=default_args
     ),
     task_id=artists_dim_task_id,
     dag=dag,
@@ -143,7 +142,7 @@ time_subtask_dag = SubDagOperator(
         insert_sql=SqlQueries.time_table_insert,
         table='time',
         truncate=True,
-        start_date=start_date,
+        default_args=default_args
     ),
     task_id=time_dim_task_id,
     dag=dag,
