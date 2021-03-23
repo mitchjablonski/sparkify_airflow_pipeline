@@ -158,7 +158,6 @@ fact_and_dim_qual_check = DataQualityOperator(
 
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
 
-
 start_operator >> create_staging_songs_table
 create_staging_songs_table >> stage_songs_to_redshift
 stage_songs_to_redshift >> load_songplays_table
